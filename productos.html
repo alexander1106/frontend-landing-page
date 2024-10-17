@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Productos</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Lista de Productos</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Código Producto</th>
+                <th>Nombre</th>
+                <th>Stock</th>
+                <th>Precio</th>
+                <th>Precio Promoción</th>
+                <th>Categoría</th>
+            </tr>
+        </thead>
+        <tbody id="productos-body">
+            <!-- Aquí se insertarán los productos -->
+        </tbody>
+    </table>
+
+    <script>
+        // Función para obtener los productos de la API
+        function obtenerProductos() {
+            fetch('http://localhost:8081/api/productos')
+                .then(response => response.json())  // Convertimos la respuesta a JSON
+                .then(data => {
+                    const tbody = document.getElementById('productos-body');
+                    tbody.innerHTML = '';  // Limpiamos el contenido anterior
+                    data.forEach(producto => {
+                        const fila = document.createElement('tr');
+
+                        // Insertamos las celdas de cada producto
+                        fila.innerHTML = `
+                            <td>${producto.id}</td>
+                            <td>${producto.codigoProducto}</td>
+                            <td>${producto.nombre}</td>
+                            <td>${producto.stock}</td>
+                            <td>${producto.precio}</td>
+                            <td>${producto.precioPromocion}</td>
+                            <td>${producto.categoria.nombre}</td>
+                        `;
+
+                        // Añadimos la fila a la tabla
+                        tbody.appendChild(fila);
+                    });
+                })
+                .catch(error => console.error('Error al obtener los productos:', error));
+        }
+
+        // Llamamos a la función al cargar la página
+        window.onload = obtenerProductos;
+    </script>
+
+</body>
+</html>
